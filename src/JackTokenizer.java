@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -17,14 +14,16 @@ import java.util.regex.Pattern;
 public class JackTokenizer {
     private final File input;
     private int linesCount = 0;
+    private final TokensWriter writer;
 
-    public JackTokenizer(File input) {
+    public JackTokenizer(File input) throws IOException {
         this.input = input;
+        writer = new TokensWriter(input);
     }
 
     private boolean multiComments = false;
 
-    public Iterator<JackToken> getTokens() throws FileNotFoundException {
+    public Iterator<JackToken> getTokens() throws Exception {
         ArrayList<JackToken> tokens = new ArrayList<>();
         FileReader reader = new FileReader(input);
         BufferedReader buffer = new BufferedReader(reader);
@@ -42,13 +41,16 @@ public class JackTokenizer {
                 } else if (trim.startsWith("/*") || trim.startsWith("*")) {
                     multiComments = true;
                 } else {
-                    tokens.addAll(readLineTokens(line));
+                    List<JackToken> jackTokens = readLineTokens(line);
+                    writer.writeTokenTokens(jackTokens);
+                    tokens.addAll(jackTokens);
                     multiComments = false;
                 }
             }
             // else skip
             linesCount++;
         });
+        writer.close();
         return tokens.iterator();
     }
 

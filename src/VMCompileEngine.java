@@ -10,7 +10,7 @@ public class VMCompileEngine {
 
     private final VMWriter vmWriter;
     private final JackParser parser;
-    private final JackAnalyzer analyzer;
+    private final JackAnalyzerWriter analyzer;
 
     private final SymbolTable classVarsST;
     private final SymbolTable subroutineVarsST;
@@ -30,7 +30,7 @@ public class VMCompileEngine {
         this.jackFileName = jackFile.getName();
         this.jackFileName = jackFileName.substring(0, jackFileName.lastIndexOf("."));
         this.vmWriter = new VMWriter(jackFile);
-        this.analyzer = new JackAnalyzer(jackFile);
+        this.analyzer = new JackAnalyzerWriter(jackFile);
         parser = new JackParser(jackFile);
         subroutineVarsST = new SymbolTable();
         classVarsST = new SymbolTable();
@@ -57,6 +57,7 @@ public class VMCompileEngine {
 //        compileStatements();
 
         expected("}");
+        writeTokenTag();
         writeTag("</class>");
         close();
 
@@ -119,6 +120,7 @@ public class VMCompileEngine {
     }
 
     private void compileSubroutineBody() throws Exception {
+        writeTag("<subroutineBody>");
         expected("{");
         writeTokenTag();
         parser.advance();
@@ -402,7 +404,8 @@ public class VMCompileEngine {
             compileTerm();
             vmWriter.writeArithmetic(CommandEnum.NOT);
         }
-        writeTag("</term>");
+        if (isNotSymbol("-"))
+            writeTag("</term>");
         if (isOp()) {
             switch (parser.tokenValue()) {
                 case "+":
@@ -413,13 +416,20 @@ public class VMCompileEngine {
                     break;
                 case "-":
                     JackToken prev = parser.getPrevToken();
+                    boolean isNeg = prev != null && prev.getType() == JackInstructionType.SYMBOL && !prev.getValue().equals(")");
+                    if (!isNeg) {
+                        writeTag("</term>");
+                    }
                     writeTokenTag();
                     parser.advance();
                     compileTerm();
-                    if (prev != null && prev.getType() == JackInstructionType.SYMBOL && !prev.getValue().equals(")"))
+                    if (isNeg)
                         vmWriter.writeArithmetic(CommandEnum.NEG);
                     else
                         vmWriter.writeArithmetic(CommandEnum.SUB);
+//                    writeTag("</term>");
+                    if (isNeg)
+                        writeTag("</term>");
                     break;
                 case "*":
                     writeTokenTag();

@@ -44,7 +44,7 @@ public class JackParser {
         return currentToken;
     }
 
-    public void parse() throws IOException {
+    public void parse() throws Exception {
         JackTokenizer tokenizer = new JackTokenizer(input);
         tokenIterator = tokenizer.getTokens();
     }

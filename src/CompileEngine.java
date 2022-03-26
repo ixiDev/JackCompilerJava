@@ -10,7 +10,7 @@ public class CompileEngine {
 
     private final VMWriter vmWriter;
     private final JackParser parser;
-    private final JackAnalyzer analyzer;
+    private final JackAnalyzerWriter analyzer;
 
     private final SymbolTable classVarsST;
     private final SymbolTable subroutineVarsST;
@@ -26,7 +26,7 @@ public class CompileEngine {
         this.jackFileName = jackFile.getName();
         this.jackFileName = jackFileName.substring(0, jackFileName.lastIndexOf("."));
         this.vmWriter = new VMWriter(jackFile);
-        this.analyzer = new JackAnalyzer(jackFile);
+        this.analyzer = new JackAnalyzerWriter(jackFile);
         parser = new JackParser(jackFile);
         subroutineVarsST = new SymbolTable();
         classVarsST = new SymbolTable();

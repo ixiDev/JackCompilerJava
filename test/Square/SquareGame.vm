@@ -74,7 +74,6 @@ function SquareGame.run 2
 push argument 0
 pop pointer 0
 push constant 0
-not
 pop local 1
 label WHILE_EXP0
 push local 1
