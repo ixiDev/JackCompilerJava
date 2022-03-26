@@ -16,7 +16,6 @@ public class VMCompileEngine {
     private final SymbolTable subroutineVarsST;
 
     private final File jackFile;
-    private String jackFileName;
     private String currentCLassName = "";
     private String currentFunName = "";
     private String currentFunType = "";
@@ -27,8 +26,6 @@ public class VMCompileEngine {
 
     public VMCompileEngine(File jackFile) throws IOException {
         this.jackFile = jackFile;
-        this.jackFileName = jackFile.getName();
-        this.jackFileName = jackFileName.substring(0, jackFileName.lastIndexOf("."));
         this.vmWriter = new VMWriter(jackFile);
         this.analyzer = new JackAnalyzerWriter(jackFile);
         parser = new JackParser(jackFile);
