@@ -11,10 +11,10 @@ class JackAnalyzerTest {
 
     @Test
     void main() {
-        JackAnalyzer.main(new String[]{"/home/ixi/IdeaProjects/nand2tetris/JackCompilerII/test/Square"});
+        JackAnalyzer.main(new String[]{"./Square"});
     }
     @Test
     void testConvertToBin() {
-        JackAnalyzer.main(new String[]{"/home/ixi/IdeaProjects/nand2tetris/JackCompilerII/test/ConvertToBin"});
+        JackAnalyzer.main(new String[]{"./ConvertToBin"});
     }
 }
